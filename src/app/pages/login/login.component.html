@@ -9,7 +9,7 @@
                 <input type="text" name="name" [(ngModel)]="signUpObj.name" placeholder="Name">
                 <input type="email" name="email" [(ngModel)]="signUpObj.email" placeholder="Email">
                 <input type="password" name="password"  [(ngModel)]="signUpObj.password" placeholder="Password">
-                <button (click)="onRegister()">Sign Up</button>
+                <button class="container-button"(click)="onRegister()">Sign Up</button>
             </form>
         </div>
         <div class="form-container sign-in" >
@@ -20,8 +20,15 @@
                 <input type="email" name="email" [(ngModel)]="loginObj.email" placeholder="Email">
                 <input type="password" name="password"   [(ngModel)]="loginObj.password" placeholder="Password">
                 <a href="#">→ Forget Your Password? ←</a>
-                
-                <button (click)="onLogin()">Sign In</button>
+                <button type="button" class="btn btn-primary" (click)="startRecording()" [disabled]="recordingInProgress">Start Recording</button>
+<button class="btn btn-primary" (click)="stopRecording()" [disabled]="!recordingInProgress">Stop Recording</button>
+<button class="btn btn-primary"(click)="playRecording()" [disabled]="audioBlobUrl === null">Play Recording</button>
+<audio controls *ngIf="audioBlobUrl">
+    <source [src]="audioBlobUrl" type="audio/wav">
+    Your browser does not support the audio element.
+  </audio>
+
+                <button class="container-button" (click)="onLogin()">Sign In</button>
             </form>
         </div>
         <div class="toggle-container">
@@ -29,12 +36,12 @@
                 <div class="toggle-panel toggle-left">
                     <h1>Welcome Back!</h1>
                     <p>Enter your personal details to use all of site features</p>
-                    <button type="button" class="hidden" id="login" (click)="isSignDivVisiable = false">Sign In</button>
+                    <button class="container-button" type="button" class="hidden" id="login" (click)="isSignDivVisiable = false">Sign In</button>
                 </div>
                 <div class="toggle-panel toggle-right">
                     <h1>Hello, Friend!</h1>
                     <p>Register with your personal details to use all of site features</p>
-                    <button type="button" class="hidden" id="register" (click)="isSignDivVisiable = true">Sign Up</button>
+                    <button class="container-button" type="button" class="hidden" id="register" (click)="isSignDivVisiable = true">Sign Up</button>
                 </div>
             </div>
         </div>
