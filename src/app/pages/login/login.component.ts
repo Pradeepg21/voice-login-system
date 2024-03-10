@@ -1,8 +1,5 @@
-import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { catchError, tap } from 'rxjs/operators';
-import { of } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -14,15 +11,19 @@ export class LoginComponent {
   audioChunks: Blob[] = [];
   audioBlobUrl: string | null = null;
   recordingInProgress = false;
+  isRecrodingComplete = false;
 
   isSignDivVisiable: boolean  = true;
 
   signUpObj: SignUpModel  = new SignUpModel();
   loginObj: LoginModel  = new LoginModel();
+  http: any;
 
-  constructor(private router: Router, private http: HttpClient){}
+  constructor(private router: Router){}
   startRecording() {
+    this.audioChunks = [];
     this.recordingInProgress = true;
+    this.isRecrodingComplete = false;
     navigator.mediaDevices.getUserMedia({ audio: true })
       .then(stream => {
         this.mediaRecorder = new MediaRecorder(stream);
@@ -38,6 +39,7 @@ export class LoginComponent {
 
   stopRecording() {
     this.recordingInProgress = false;
+    this.isRecrodingComplete = true;
     if (this.mediaRecorder && this.mediaRecorder.state === 'recording') {
       this.mediaRecorder.stop();
       this.mediaRecorder.onstop = () => {
@@ -52,29 +54,6 @@ export class LoginComponent {
       const audio = new Audio(this.audioBlobUrl);
       audio.play();
     }
-  }
-  sendRecording() {
-    const audioBlob = new Blob(this.audioChunks, { type: 'audio/wav' });
-
-    // Create FormData object to send audio blob
-    const formData = new FormData();
-    formData.append('audioFile', audioBlob, 'recording.wav');
-
-    // Replace 'YOUR_API_ENDPOINT' with your actual API endpoint
-    const apiUrl = 'YOUR_API_ENDPOINT';
-
-    // Make HTTP POST request to API endpoint
-    this.http.post(apiUrl, formData).pipe(
-      tap(response => {
-        console.log('Recording sent successfully:', response);
-        // Handle response as needed
-      }),
-      catchError(error => {
-        console.error('Error sending recording:', error);
-        // Handle error as needed
-        return of(error);
-      })
-    ).subscribe();
   }
 
 

@@ -22,7 +22,8 @@
                 <a href="#">→ Forget Your Password? ←</a>
                 <button type="button" class="btn btn-primary" (click)="startRecording()" [disabled]="recordingInProgress">Start Recording</button>
 <button class="btn btn-primary" (click)="stopRecording()" [disabled]="!recordingInProgress">Stop Recording</button>
-<button class="btn btn-primary"(click)="playRecording()" [disabled]="audioBlobUrl === null">Play Recording</button>
+<button class="btn btn-primary"(click)="playRecording()" [disabled]="!isRecrodingComplete">Play Recording</button>
+
 <audio controls *ngIf="audioBlobUrl">
     <source [src]="audioBlobUrl" type="audio/wav">
     Your browser does not support the audio element.
