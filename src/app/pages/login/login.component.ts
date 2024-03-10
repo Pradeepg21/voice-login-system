@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { ApiService } from '../../api.service';
+import { catchError, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -12,6 +14,7 @@ export class LoginComponent {
   audioBlobUrl: string | null = null;
   recordingInProgress = false;
   isRecrodingComplete = false;
+  username: string = '';
 
   isSignDivVisiable: boolean  = true;
 
@@ -19,7 +22,7 @@ export class LoginComponent {
   loginObj: LoginModel  = new LoginModel();
   http: any;
 
-  constructor(private router: Router){}
+  constructor(private router: Router, private apiService: ApiService){}
   startRecording() {
     this.audioChunks = [];
     this.recordingInProgress = true;
@@ -55,6 +58,43 @@ export class LoginComponent {
       audio.play();
     }
   }
+
+  sendRecording() {
+    const audioBlob = new Blob(this.audioChunks, { type: 'audio/wav' });
+    const reader = new FileReader();
+  
+    reader.onload = () => {
+      const base64data = reader.result?.toString().split(',')[1]; // Extracting base64 data
+  
+      if (base64data) {
+        this.apiService.sendCredentials(this.loginObj.email, base64data)
+          .pipe(
+            switchMap(response => {
+              console.log('Credentials sent successfully:', response);
+              // Handle response if needed
+              return response; // Returning the response for further processing
+            }),
+            catchError(error => {
+              console.error('Error sending credentials:', error);
+              // Handle error if needed
+              throw error; // Rethrow the error to be caught by the component
+            })
+          )
+          .subscribe();
+      } else {
+        console.error('Base64 data is null or undefined.');
+      }
+    };
+  
+    reader.onerror = (error) => {
+      console.error('FileReader error:', error);
+      // Handle error if needed
+    };
+  
+    reader.readAsDataURL(audioBlob);
+  }
+  
+
 
 
   onRegister() {
