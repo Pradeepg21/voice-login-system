@@ -19,7 +19,7 @@
                 <span>Use your email password</span>
                 <input type="email" name="email" [(ngModel)]="loginObj.email" placeholder="Email">
                 <input type="password" name="password"   [(ngModel)]="loginObj.password" placeholder="Password">
-                <a href="#">→ Forget Your Password? ←</a>
+                <a routerLink="/update-password">Update Password</a>
                 <button type="button" class="btn btn-primary" (click)="startRecording()" [disabled]="recordingInProgress">Start Recording</button>
 <button class="btn btn-primary" (click)="stopRecording()" [disabled]="!recordingInProgress">Stop Recording</button>
 <button class="btn btn-primary"(click)="playRecording()" [disabled]="!isRecrodingComplete">Play Recording</button>

@@ -18,4 +18,13 @@ export class ApiService {
 
     return this.http.post<any>(`${this.apiUrl}/login`, credentials);
   }
+
+  updatePassword(username: string, oldPassword: Blob, newPassword: Blob): Observable<any> {
+    const formData: FormData = new FormData();
+    formData.append('username', username);
+    formData.append('oldPassword', oldPassword, 'oldPassword.wav');
+    formData.append('newPassword', newPassword, 'newPassword.wav');
+
+    return this.http.post(`${this.apiUrl}/password/update`, formData);
+  }
 }
